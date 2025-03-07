@@ -1,0 +1,19 @@
+# Entorno virtual
+myenv/
+venv/
+env/
+
+# Archivos de Python compilados
+__pycache__/
+*.pyc
+
+# Archivos de configuración local
+.env
+.secrets
+
+# Archivos de IDE
+.vscode/
+.idea/
+
+# Archivos de sistema
+.DS_Store
