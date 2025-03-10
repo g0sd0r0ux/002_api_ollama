@@ -13,7 +13,7 @@ from langchain.prompts import PromptTemplate
 app = Flask(__name__)
 
 # Ruta de la base de datos vectorial
-PATH_DIR_DB = "db"
+DB_PATH = "db"
 
 # Configuración del modelo LLM que se va utilizar en Ollama
 LLM = Ollama(model="llama3", temperature=0.3, num_predict=512)
@@ -43,6 +43,9 @@ ENDPOINT_PROD = '/prod'
 
 # Generación de endpoints
 ep1 = Endpoint(route=ENDPOINT_DEV + '/test', methods=['POST'])
+ep2 = Endpoint(route=ENDPOINT_DEV + "/load/data", methods=['POST'])
+
+
 
 # Generación de rutas con los endpoints desarrollados
 @app.route(ep1.route, methods=ep1.methods)
@@ -71,6 +74,50 @@ def devTest():
         return jsonify({'error': 'No es posible recuperar la data'}), 400
 
     return jsonify({"response": response})
+
+
+
+# Subir la información
+@app.route(ep2.route, methods=ep2.methods)
+def pdfPost():
+
+    # Información del endpoint en la terminal
+    ep2.info()
+
+    # Recibimos el archivo con la llave 'data', construimos la ruta, y guardamos el archivo
+    pdf_data = request.files["data"]
+    pdf_name = pdf_data.filename
+    pdf_path = "pdf/"+ pdf_name
+    pdf_data.save(pdf_path)
+    print(f"Cargando archivo: {pdf_name}")
+
+    # Creamos una instancia de PDFPlumberLoader con la ruta del archivo
+    pdf_plumber = PDFPlumberLoader(pdf_path) # Cargar archivo subido
+
+    # Cargamos y dividimos los documentos
+    pdf_docs = pdf_plumber.load_and_split()  # Split docs
+    print(f"Documentos cargados: {len(pdf_docs)}") 
+
+    # Creamos los chunks con la configuración de TEXT_SPLITTER
+    chunks = TEXT_SPLITTER.split_documents(pdf_docs) # Chunks de texto
+    print(f"Chunks Totales: {len(chunks)}")
+
+    # Creación y almacenamiendo de bases vectoriales
+    vector_db = Chroma.from_documents(
+        documents= chunks,
+        embedding= EMBEDDING,
+        persist_directory= DB_PATH)
+    vector_db.persist()
+
+    # Ajuste de la respuesta
+    response = {"status": "Archivo cargado correctamente",
+               "filename": pdf_name,
+               "total_docs": len(pdf_docs),
+               "chunks": len(chunks)}
+    
+    return response
+
+
 
 # Función para iniciar la APP, está se ejecutá si el módulo fue ejecutado de forma directa
 def start_app():
