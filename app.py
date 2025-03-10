@@ -1,7 +1,7 @@
 from helpers.endpoint import Endpoint
 from flask import Flask, request, jsonify
 from langchain_community.llms import Ollama
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 from langchain_community.document_loaders import PDFPlumberLoader
@@ -42,21 +42,21 @@ ENDPOINT_DEV = '/dev'
 ENDPOINT_PROD = '/prod'
 
 # Generación de endpoints
-ep1 = Endpoint(route=ENDPOINT_DEV + '/test', methods=['POST'])
-ep2 = Endpoint(route=ENDPOINT_DEV + "/load/data", methods=['POST'])
-
+EP1 = Endpoint(route=ENDPOINT_DEV + '/test', methods=['POST'])
+EP2 = Endpoint(route=ENDPOINT_DEV + "/load/data", methods=['POST'])
+EP3 = Endpoint(route=ENDPOINT_DEV + "/assistant", methods=['POST'])
 
 
 # Generación de rutas con los endpoints desarrollados
-@app.route(ep1.route, methods=ep1.methods)
-def devTest():
+@app.route(EP1.route, methods=EP1.methods)
+def test():
     """
     Endpoint para pruebas en el entorno de desarrollo.
     Recibe un JSON con una clave 'test' y responde con el modelo
     LLM configurado previamente.
     """
     # Entregar información sobre el endpoint en la terminal
-    ep1.info()
+    EP1.info()
 
     # Verificar si se recibió un JSON válido
     if not request.is_json:
@@ -78,11 +78,11 @@ def devTest():
 
 
 # Subir la información
-@app.route(ep2.route, methods=ep2.methods)
-def pdfPost():
+@app.route(EP2.route, methods=EP2.methods)
+def loadData():
 
     # Información del endpoint en la terminal
-    ep2.info()
+    EP2.info()
 
     # Recibimos el archivo con la llave 'data', construimos la ruta, y guardamos el archivo
     pdf_data = request.files["data"]
@@ -119,8 +119,54 @@ def pdfPost():
 
 
 
+# Consultar en base al pdf
+@app.route(EP3.route, methods=EP3.methods)
+def assistant():
+    
+    # Revisar información del endpoint en la terminal
+    EP3.info()
+
+    # Obtener el cuerpo de la solicitud y el user-prompt
+    json_body = request.json
+    user_prompt= json_body.get("user_prompt")
+    print(f"Consulta del usuario: {user_prompt}")
+    
+    # Carga de la base vectorial
+    print("Cargando base vectorial")
+    vector_db = Chroma(
+        persist_directory=DB_PATH, embedding_function=EMBEDDING
+    )
+
+    # Configuración del retriever
+    retrieve = vector_db.as_retriever(
+        search_type= "similarity_score_threshold",
+        search_kwargs={
+            "k": 3,
+            "score_threshold": 0.1 # Limite de busqueda
+        }
+    )
+
+    # Agregando configuración LLM y plantilla general del 'Prompt'
+    document_chain = create_stuff_documents_chain(
+        LLM, RAW_PROMPT
+    )
+
+    # Generando la cadena de recuperación - retriever chain - con todos los parámetros
+    chain = create_retrieval_chain(retrieve, document_chain)
+
+    # Realización de consulta con RAG
+    result = chain.invoke({"input": user_prompt})
+    print(f'Resultado de consulta: ' + result)
+    
+    # Armar la respuesta de la solicitud, con resultado de RAG
+    response = {"respuesta": result['answer'].replace("<s>[INST]", "").replace("[/INST]</s>","").strip()}
+
+    return response
+
+
+
 # Función para iniciar la APP, está se ejecutá si el módulo fue ejecutado de forma directa
-def start_app():
+def startApp():
     """
     Inicia la aplicación Flask.
     """
@@ -129,4 +175,4 @@ def start_app():
 # Verificar la variable especial de python, si es el valor es '__main__', es porque se ejecutó el módulo
 # app.py directamente.
 if __name__ == "__main__":
-    start_app()
+    startApp()
