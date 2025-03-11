@@ -52,7 +52,7 @@ sudo apt update && sudo apt install python3 python3-pip
 sudo apt install python3-venv
 ```
 
-#### Instalación del Proyecto
+### Instalación del Proyecto
 
 Sigue estos pasos para configurar y ejecutar la API:
 
@@ -108,7 +108,7 @@ python3 app.py
 ```
 - La API estará disponible en `http://127.0.0.1:8080`.
 
-#### Uso de la API
+### Uso de la API
 
 La API tiene los siguientes endpoints:
 
@@ -133,7 +133,7 @@ curl -X POST -F "data=@ruta-proyecto/pdf/general_rules_02.pdf" http://127.0.0.1:
 curl -X POST "http://127.0.0.1:8080/dev/assistant" -d '{"user_prompt": "¿Cuáles son los requisitos para contratar el seguro?"}'
 ```
 
-#### Configuración Opcional
+### Configuración Opcional
 
 1. Visual Studio Code (VSCode):
 - Si prefieres usar VSCode para editar el código, instala la extensión `Remote - WSL`.
