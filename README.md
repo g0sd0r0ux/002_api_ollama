@@ -1,8 +1,8 @@
-## API para Asistente de IA sobre Seguro de Renta Hospitalaria
+# API para Asistente de IA sobre Seguro de Renta Hospitalaria
 
 Este proyecto consiste en el desarrollo de una API que configura un Asistente de IA para proporcionar información clara sobre cómo contratar el seguro de Renta Hospitalaria, incluyendo requisitos, coberturas, costos, beneficios y otros detalles relevantes. La API utiliza el modelo llama3 a través de Ollama y está diseñada para ser fácil de configurar y usar.
 
-### Requisitos Previos
+## Requisitos Previos
 
 Antes de comenzar, asegúrate de tener lo siguiente:
 
@@ -52,7 +52,7 @@ sudo apt update && sudo apt install python3 python3-pip
 sudo apt install python3-venv
 ```
 
-#### Instalación del Proyecto
+## Instalación del Proyecto
 
 Sigue estos pasos para configurar y ejecutar la API:
 
@@ -90,9 +90,6 @@ python3 -m venv myenv
 source myenv/bin/activate
 ```
 > **Nota**: Siempre activa el entorno virtual antes de trabajar en el proyecto.
-<p style="color: gray; font-style: italic;">
-   Si encuentras algún error durante la instalación, asegúrate de tener las últimas versiones de Python y pip.
-</p>
 
 4. Instalar Dependencias:
 - Instala las dependencias necesarias desde el archivo `requirements.txt`.
@@ -108,7 +105,7 @@ python3 app.py
 ```
 - La API estará disponible en `http://127.0.0.1:8080`.
 
-#### Uso de la API
+## Uso de la API
 
 La API tiene los siguientes endpoints:
 
@@ -133,7 +130,7 @@ curl -X POST -F "data=@ruta-proyecto/pdf/general_rules_02.pdf" http://127.0.0.1:
 curl -X POST "http://127.0.0.1:8080/dev/assistant" -d '{"user_prompt": "¿Cuáles son los requisitos para contratar el seguro?"}'
 ```
 
-#### Configuración Opcional
+## Configuración Opcional
 
 1. Visual Studio Code (VSCode):
 - Si prefieres usar VSCode para editar el código, instala la extensión `Remote - WSL`.
