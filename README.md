@@ -113,7 +113,9 @@ La API tiene los siguientes endpoints:
 - Prueba el modelo `llama3` directamente.
 - Ejemplo de solicitud:
 ```bash
-curl -X POST "http://127.0.0.1:8080/dev/test" -d '{"test": "Hola, ¿cómo estás?"}'
+curl -X POST "http://127.0.0.1:8080/dev/test" \
+     -H "Content-Type: application/json" \
+     -d '{"test": "Hola, ¿cómo estás?"}'
 ```
 
 2. `POST /dev/load/data`:
@@ -127,7 +129,9 @@ curl -X POST -F "data=@ruta-proyecto/pdf/general_rules_02.pdf" http://127.0.0.1:
 - Realiza consultas basadas en la base de datos vectorial.
 - Ejemplo de solicitud:
 ```bash
-curl -X POST "http://127.0.0.1:8080/dev/assistant" -d '{"user_prompt": "¿Cuáles son los requisitos para contratar el seguro?"}'
+curl -X POST "http://127.0.0.1:8080/dev/assistant" \
+     -H "Content-Type: application/json" \
+     -d '{"user_prompt": "¿Cuáles son los requisitos para contratar el seguro?"}'
 ```
 
 ## Configuración Opcional
