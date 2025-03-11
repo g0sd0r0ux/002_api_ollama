@@ -94,7 +94,7 @@ def loadData():
     logger.info(f"Chunks Totales: {len(chunks)}")
 
     # Creamos la base de datos vectorial y la persistimos (la persistencia es automática)
-    vector_db = Chroma.from_documents(documents=chunks, embedding=EMBEDDING, persist_directory=DB_PATH)
+    Chroma.from_documents(documents=chunks, embedding=EMBEDDING, persist_directory=DB_PATH)
     response = {"status": "Archivo cargado correctamente", "filename": pdf_name, "total_docs": len(pdf_docs), "chunks": len(chunks)}
     return jsonify(response)
 
