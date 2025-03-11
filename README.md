@@ -98,14 +98,36 @@ source myenv/bin/activate
 pip install -r requirements.txt
 ```
 
-5. Ejecutar la API:
+## Uso de la API
+
+Antes de usar la API, asegúrate de que:
+
+1. El servidor de Ollama esté en ejecución:
+- Ejecuta el siguiente comando en una terminal:
+```bash
+ollama serve
+```
+- Esto inicia el servidor de Ollama, que es necesario para que la API funcione.
+
+2. El modelo `llama3` este descargado:
+- Si no has descargado el modelo de `llama3`, ejecuta:
+```bash
+ollama pull llama3
+```
+> **Servidor de Ollama**: La API depende de que el servidor de Ollama esté en ejecución (`ollama serve`). Si no lo está, la API no podrá comunicarse con el modelo `llama3`.
+> **Modelo `llama3`**: Asegúrate de que el modelo `llama3` esté descargado en Ollama. Puedes verificarlo ejecutando:
+```bash
+ollama list
+```
+
+3. Ejecutar la API:
 - Inicia la API con el siguiente comando:
 ```bash
 python3 app.py
 ```
 - La API estará disponible en `http://127.0.0.1:8080`.
 
-## Uso de la API
+## Endpoints Disponibles
 
 La API tiene los siguientes endpoints:
 
@@ -132,6 +154,24 @@ curl -X POST -F "data=@ruta-proyecto/pdf/general_rules_02.pdf" http://127.0.0.1:
 curl -X POST "http://127.0.0.1:8080/dev/assistant" \
      -H "Content-Type: application/json" \
      -d '{"user_prompt": "¿Cuáles son los requisitos para contratar el seguro?"}'
+```
+## Ejemplo de Flujo de Trabajo
+
+1. Inicia el servidor de Ollama:
+```bash
+ollama serve
+```
+
+2. En otra terminal, inicia la API:
+```bash
+python3 app.py
+```
+
+3. En otra terminal, realiza una solicitud de prueba:
+```bash
+curl -X POST "http://127.0.0.1:8080/dev/test" \
+     -H "Content-Type: application/json" \
+     -d '{"test": "Hola, ¿cómo estás?"}'
 ```
 
 ## Configuración Opcional

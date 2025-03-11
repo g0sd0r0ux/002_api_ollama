@@ -8,6 +8,7 @@ from langchain_community.document_loaders import PDFPlumberLoader
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
 from langchain.prompts import PromptTemplate
+from httpx import ConnectError
 from helpers.endpoint import Endpoint
 
 # Configuración de logging
@@ -57,15 +58,30 @@ def test():
     Endpoint para pruebas en el entorno de desarrollo.
     Recibe un JSON con una clave 'test' y responde con el modelo LLM configurado previamente.
     """
+
+    # Verificamos que el cuerpo de la solicitud sea un json
     EP1.info()
     if not request.is_json:
         return jsonify({'error': 'Se esperaba una estructura de tipo JSON'}), 400
     json_body = request.json
     test = json_body.get("test")
-    response = LLM.invoke(test)
-    if response is None:
+
+    # Verficamos que el parámetro test no sea nulo
+    if test is None:
         return jsonify({'error': 'No es posible recuperar la data'}), 400
-    return jsonify({"response": response})
+
+    try:
+        # Intentamos obtener una respuesta del modelo LLM
+        response = LLM.invoke(test)
+        if response is None:
+            return jsonify({'error': 'No se ha logrado procesar la solicitud'}), 400
+        return jsonify({"response": response})
+    except ConnectError:
+        # Capturamos el error si el servidor de Ollama no está disponible
+        return jsonify({'error': 'El servidor de Ollama no está disponible. Asegúrate de ejecutar "ollama serve".'}), 500
+    except Exception as e:
+        # Capturamos cualquier otro error inesperado
+        return jsonify({'error': f'Ha ocurrido un error inesperado: {str(e)}'}), 500
 
 @app.route(EP2.route, methods=EP2.methods)
 def loadData():
