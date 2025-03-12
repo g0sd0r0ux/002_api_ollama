@@ -1,10 +1,10 @@
 # API para Asistente de IA sobre Seguro de Renta Hospitalaria
 
-Este proyecto consiste en el desarrollo de una API que configura un Asistente de IA para proporcionar información clara sobre cómo contratar el seguro de Renta Hospitalaria, incluyendo requisitos, coberturas, costos, beneficios y otros detalles relevantes. La API utiliza el modelo llama3 a través de Ollama y está diseñada para ser fácil de configurar y usar.    
+Este proyecto consiste en el desarrollo de una API que configura un Asistente de IA para proporcionar información clara sobre cómo contratar el seguro de Renta Hospitalaria, incluyendo requisitos, coberturas, costos, beneficios y otros detalles relevantes.   
 
-Ten en cuenta los diferentes modelos que puedes utilizar según los recursos disponibles. Puedes revisar en detalle los modelos en la documentación de Ollama [la documentación de Ollama](https://github.com/ollama/ollama?tab=readme-ov-file#model-library).    
+Ten en cuenta los diferentes modelos que puedes utilizar según los recursos disponibles. Puedes revisar en detalle los modelos en [la documentación de Ollama](https://github.com/ollama/ollama?tab=readme-ov-file#model-library).    
 
-En este apartado, utilizaremos el modelo `llama3`, que equivale a un modelo 7B, recomendado para dispositivos con al menos 8GB de RAM.    
+En este apartado, utilizaremos el modelo `llama3` a través de Ollama para el desarrollo de la API, que equivale a un modelo 7B, recomendado para dispositivos con al menos 8GB de RAM.    
 
 ## Requisitos Previos
 
